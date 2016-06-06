@@ -20,7 +20,7 @@ public class OrdersSeriveTest {
 	@Test
 	public void testGetOrders() {
 		serive.getOrdersById(10000000);
-		System.out.print("fs");
+		
 	}
 	
 	
