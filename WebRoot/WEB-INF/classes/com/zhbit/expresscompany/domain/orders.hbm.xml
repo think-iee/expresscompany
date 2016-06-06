@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.zhbit.expresscompany.domain.Orders" table="Orders">
+		<id name="oid">
+			<generator class="native"/>
+		</id>
+		
+		<property name="uid" type="string" length="32"/>
+		<property name="usname" type="string" length="16"/>
+		<property name="usphone" type="string" length="16"/>
+		<property name="usaddress" type="string" length="128"/>
+		<property name="urname" type="string" length="16"/>
+		<property name="urphone" type="string" length="16"/>
+		<property name="uraddress" type="string" length="128"/>
+		<property name="oremark" type="string" length="128"/>
+		<property name="owname" type="string" length="32"/>
+		<property name="oweight" />
+		<property name="omoney" />
+		<property name="obegintime"/>
+		<property name="oendtime"/>
+		<property name="osid"/>
+	
+	</class>
+</hibernate-mapping>

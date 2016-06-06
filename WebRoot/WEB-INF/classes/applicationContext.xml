@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">              
+ 
+<bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+	<property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+	<property name="jdbcUrl" value="jdbc:sqlserver://115.159.126.198:1433;DatabaseName=express"/>
+	<property name="user" value="sa"/>
+	<property name="password" value="zhbit2."/>
+	<!--初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+	<property name="initialPoolSize" value="1"/>
+	<!--连接池中保留的最小连接数。-->
+	<property name="minPoolSize" value="1"/>
+	<!--连接池中保留的最大连接数。Default: 15 -->
+	<property name="maxPoolSize" value="300"/>
+	<!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+	<property name="maxIdleTime" value="60"/>
+	<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+	<property name="acquireIncrement" value="5"/>
+	<!--每60秒检查所有连接池中的空闲连接。Default: 0 -->
+	<property name="idleConnectionTestPeriod" value="60"/>
+</bean>
+
+<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+ 	<property name="dataSource" ref="datasource"/>
+ 	<property name="mappingResources">
+    	<list>
+      	<value>com/zhbit/expresscompany/domain/notice.hbm.xml</value>
+      	<value>com/zhbit/expresscompany/domain/user.hbm.xml</value>
+      	<value>com/zhbit/expresscompany/domain/usenders.hbm.xml</value>
+    	<value>com/zhbit/expresscompany/domain/urecipients.hbm.xml</value>
+    	<value>com/zhbit/expresscompany/domain/logisitcs.hbm.xml</value>    	 
+    	<value>com/zhbit/expresscompany/domain/province.hbm.xml</value>    	
+    	<value>com/zhbit/expresscompany/domain/city.hbm.xml</value>    	
+    	<value>com/zhbit/expresscompany/domain/banches.hbm.xml</value>    
+    	<value>com/zhbit/expresscompany/domain/staff.hbm.xml</value>    
+    	<value>com/zhbit/expresscompany/domain/orders.hbm.xml</value>
+    	<value>com/zhbit/expresscompany/domain/ostate.hbm.xml</value>
+        <value>com/zhbit/expresscompany/domain/sType.hbm.xml</value>
+    	</list>
+    	
+ 	</property>
+ 	<property name="hibernateProperties">
+ 	<props>
+ 	<prop key="hibernate.dialect">org.hibernate.dialect.SQLServer2008Dialect</prop>
+ 	<prop key="hibernate.hbm2ddl.auto">update</prop>
+ 	<prop key="hibernate.show_sql">true</prop>
+ 	<prop key="hibernate.format_sql">true</prop>
+ 	<prop key="hibernate.current_session_context_class">
+		org.springframework.orm.hibernate4.SpringSessionContext</prop>
+ 	</props>
+ 	</property>
+</bean> 
+
+	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	<!-- tx:advice：定义事务通知，transaction-manager属性用于指定事务管理器 --> 
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		  <tx:attributes>
+		  	<!-- tx:method为某个或某些（name属性可使用通配符）指定方法的5种事务属性; rollback-for属性用于设置事务回滚的异常，若有多个，则用逗号隔开 -->
+		    <tx:method name="get*" read-only="true" />
+		    <tx:method name="*" propagation="REQUIRED" timeout="5" read-only="false"/>
+		  </tx:attributes>
+	</tx:advice>
+	
+	
+	<!--使用基于XML方式配置事务 -->
+	<aop:config>
+		<!-- aop:pointcut:使用切入点表达式定义切入点 -->
+	  	<aop:pointcut id="transactionPointcut" expression="execution(* com.zhbit.expresscompany.service..*.*(..))"/>
+	  	<!-- aop:advisor：用于指定哪些Bean应该被通知 -->
+	  	<aop:advisor advice-ref="txAdvice" pointcut-ref="transactionPointcut"/>
+	</aop:config>
+	
+	<!-- 辅助 -->
+	<bean id="noticeDao" class="com.zhbit.expresscompany.dao.impl.NoticeDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="noticeSerive" class="com.zhbit.expresscompany.service.impl.NoticeSeriveBean">
+		<property name="noticeDao" ref="noticeDao"/>
+	</bean>
+	
+	<bean id="noticeAction" class="com.zhbit.expresscompany.web.action.NoticeAction" scope="request">
+		<property name="serive" ref="noticeSerive"/>
+	</bean>
+	<!-- 结束 -->
+	
+	<bean id="userDao" class="com.zhbit.expresscompany.dao.impl.UserDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+	<bean id="userSerive" class="com.zhbit.expresscompany.service.impl.UserSeriveBean">
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	<bean id="userAction" class="com.zhbit.expresscompany.web.action.UserAction" scope="request">
+		<property name="serive" ref="userSerive"/>
+	</bean>
+	
+	
+	<bean id="usendersDao" class="com.zhbit.expresscompany.dao.impl.USendersDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>		
+	<bean id="usendersSerive" class="com.zhbit.expresscompany.service.impl.USendersSeriveBean">
+		<property name="usendersDao" ref="usendersDao"/>
+	</bean>
+	<bean id="usendersAction" class="com.zhbit.expresscompany.web.action.UsendersAction" scope="request">
+		<property name="serive" ref="usendersSerive"/>
+	</bean>
+	
+
+	<bean id="urecipientsDao" class="com.zhbit.expresscompany.dao.impl.URecipientsDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>		
+	<bean id="urecipientsSerive" class="com.zhbit.expresscompany.service.impl.URecipientsSeriveBean">
+		<property name="urecipientsDao" ref="urecipientsDao"/>
+	</bean>
+	
+	
+	<bean id="logisitcsDao" class="com.zhbit.expresscompany.dao.impl.LogisitcsDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+ 	<bean id="logisitcsSerive" class="com.zhbit.expresscompany.service.impl.LogisitcsSeriveBean">
+ 		<property name="logisitcsDao" ref="logisitcsDao"/>
+ 	</bean>
+ 	<bean id="logisitcsAction" class="com.zhbit.expresscompany.web.action.LogisitcsAction" scope="request">
+		<property name="serive" ref="logisitcsSerive"/>
+	</bean>
+	
+	<bean id="banchesDao" class="com.zhbit.expresscompany.dao.impl.BanchesDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="banchesSerive" class="com.zhbit.expresscompany.service.impl.BanchesSeriveBean">
+		<property name="banchesDao" ref="banchesDao"/>
+	</bean>
+	
+	<bean id="banchesAction" class="com.zhbit.expresscompany.web.action.BanchesAction" scope="request">
+		<property name="serive" ref="banchesSerive"/>
+		<property name="serive1" ref="provinceSerive"/>
+		<property name="serive2" ref="citySerive"/>
+	</bean>
+	
+
+	<bean id="provinceDao" class="com.zhbit.expresscompany.dao.impl.ProvinceDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+	<bean id="provinceSerive" class="com.zhbit.expresscompany.service.impl.ProvinceSeriveBean">
+		<property name="provinceDao" ref="provinceDao"/>
+	</bean>
+	
+	
+	
+	<bean id="cityDao" class="com.zhbit.expresscompany.dao.impl.CityDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+	<bean id="citySerive" class="com.zhbit.expresscompany.service.impl.CitySeriveBean">
+		<property name="cityDao" ref="cityDao"/>
+	</bean>
+	
+	<bean id="provinceAction" class="com.zhbit.expresscompany.web.action.ProvinceAction" scope="request">
+		<property name="serive" ref="provinceSerive"/>
+		<property name="serive1" ref="citySerive"/>
+		<property name="serive2" ref="banchesSerive"/>
+	</bean>
+	
+        <bean id="sTypeDao" class="com.zhbit.expresscompany.dao.impl.STypeDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="sTypeSerive" class="com.zhbit.expresscompany.service.impl.STypeSeriveBean">
+		<property name="sTypeDao" ref="sTypeDao"/>
+	</bean>
+	
+
+	<bean id="staffDao" class="com.zhbit.expresscompany.dao.impl.StaffDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="staffSerive" class="com.zhbit.expresscompany.service.impl.StaffSeriveBean">
+		<property name="staffDao" ref="staffDao"/>
+	</bean>
+	<bean id="staffAction" class="com.zhbit.expresscompany.web.action.StaffAction" scope="request">
+		<property name="serive" ref="staffSerive"/>
+		<property name="serive1" ref="sTypeSerive"/>
+		<property name="serive2" ref="banchesSerive"/>
+	</bean>
+	
+	<bean id="provinceCityAction" class="com.zhbit.expresscompany.web.action.ProvinceCityAction" scope="request">
+		<property name="cityserive" ref="citySerive"/>
+		<property name="provinceserive" ref="provinceSerive"/>
+	</bean>
+
+	<bean id="queryBranchAction" class="com.zhbit.expresscompany.web.action.QueryBranchAction" scope="request">
+		<property name="serive" ref="banchesSerive"/>
+	</bean>	
+	
+	<!-- 订单 -->
+	<bean id="ordersDao" class="com.zhbit.expresscompany.dao.impl.OrdersDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="ordersSerive" class="com.zhbit.expresscompany.service.impl.OrdersSeriveBean">
+		<property name="ordersDao" ref="ordersDao"/>
+	</bean>
+	
+	<bean id="ordersAction" class="com.zhbit.expresscompany.web.action.OrdersAction" scope="request">
+		<property name="serive" ref="ordersSerive"/>
+		<property name="pserive" ref="provinceSerive"/>
+		<property name="cserive" ref="citySerive"/>
+	</bean>
+	<!-- 订单 -->
+	
+	<!-- 订单状态 -->
+	<bean id="ostateDao" class="com.zhbit.expresscompany.dao.impl.OStateDaoBean">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="ostateSerive" class="com.zhbit.expresscompany.service.impl.OStateSeriveBean">
+		<property name="ostateDao" ref="ostateDao"/>
+	</bean>
+	
+	<bean id="ostateAction" class="com.zhbit.expresscompany.web.action.OStateAction" scope="request">
+		<property name="serive" ref="ostateSerive"/>
+	</bean>
+	<!-- 订单状态 -->
+ 
+</beans>
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.zhbit.expresscompany.domain.URecipients" table="URecipients">
+		<id name="urid"/>	
+		<property name="uid" type="string" length="32"/>
+		<property name="urname" type="string" length="16"/>
+		<property name="urphone" type="string" length="16"/>
+		<property name="uraddress" type="string" length="128"/>
+	</class>	
+</hibernate-mapping>

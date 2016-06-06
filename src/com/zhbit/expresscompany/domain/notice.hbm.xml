@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.zhbit.expresscompany.domain.Notice" table="T_notice">
+		<id name="id">
+			<generator class="native"/>
+		</id>
+		
+		<property name="title" type="string" length="50"/>
+	
+	</class>
+</hibernate-mapping>

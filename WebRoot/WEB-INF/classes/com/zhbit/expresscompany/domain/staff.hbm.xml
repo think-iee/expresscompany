@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.zhbit.expresscompany.domain.Staff" table="Staff">
+		<id name="sid"/>
+		<property name="spd" type="string" length="32"/>
+		<property name="sname" type="string" length="16"/>
+		<property name="sphone" type="string" length="16"/>
+		<property name="saddress" type="string" length="128"/>
+		<property name="bid" type="int" />	
+		<property name="stid" type="int" />	
+
+	</class>	
+</hibernate-mapping>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.action.extension" value="do,action" />
+	<constant name="struts.serve.static.browserCache" value="false"/>
+	<constant name="struts.configuration.xml.reload" value="true"/>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.objectFactory" value="spring" />
+
+	<package name="noticemanage" extends="struts-default" namespace="/noticemanage">
+		<action name="*Notice" class="noticeAction" method="{1}">
+			<result name="input">/addNotice.jsp</result>
+			<result name="success">/showSuccess.jsp</result>
+		</action>
+	</package>
+	
+        <package name="banchesmanage" extends="struts-default" namespace="/banchesmanage">
+		<action name="*Banches" class="banchesAction" method="{1}">
+			<result name="success">/showSuccess.jsp</result>
+			<result name="input">/page/background/upDatePage.jsp</result>
+			<result name="saveupdate">/showSuccess.jsp</result>
+		</action>
+        
+         <action name="*Province" class="provinceAction" method="{1}">
+			<result name="success">/page/background/websitepage.jsp</result>
+		</action>
+        </package>
+
+	<package name="usermanage" extends="struts-default" namespace="/usermanage">
+		<action name="*User" class="userAction" method="{1}">
+			<result name="success">/index.jsp</result>
+			<result name="input">/registerTest.jsp</result>
+			<result name="LoginUser">/page/foreground/index.jsp</result>
+		</action>
+                <action name="Register" class="userAction" method="register">
+			<result>/page/foreground/index.jsp</result>
+		</action>
+
+	</package>
+	
+	<package name="staffmanage" extends="struts-default" namespace="/staffmanage">
+		<action name="*Staff" class="staffAction" method="{1}">
+			<result name="LoginStaff">/page/background/manage.jsp</result>
+		        <result name="enterWebsite">/page/background/firstmanagerpage.html</result>
+               </action>
+	</package>
+	<package name="logisitcsmanage" extends="struts-default" namespace="/logisitcsmanage">
+		<action name="*Logisitcs" class="logisitcsAction" method="{1}">
+			<result name="success">/page/foreground/logisitcs.jsp</result>
+		</action>
+	</package>
+	
+	
+	<package name="provincecitymanage" extends="struts-default" namespace="/provincecitymanage">
+		<action name="*ProvinceCity" class="provinceCityAction" method="{1}">
+			<result name="branch">/page/foreground/queryBranch.jsp</result>
+			<result name="phone">/page/foreground/queryBranchPhone.jsp</result>
+		</action>
+	</package>
+ 
+	<package name="querybranchmanage" extends="struts-default" namespace="/querybranchmanage">
+		<action name="*QueryBranch" class="queryBranchAction" method="{1}">
+			<result name="banches">/page/foreground/branch.jsp</result>
+			<result name="phones">/page/foreground/branchPhone.jsp</result>
+		</action>
+	</package>
+	<package name="address" extends="struts-default" namespace="/address">
+
+		
+		<action name="getall" class="provinceAction" method="getAll">
+			<result>/page/foreground/sender.jsp</result>
+		</action>
+	</package>
+	
+	<package name="ordersmanage" extends="struts-default" namespace="/orders">
+		<action name="addorders" class="ordersAction" method="addOrders">
+			<result>/page/foreground/index.jsp</result>
+		</action>
+		
+	</package>
+	
+
+</struts>

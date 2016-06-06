@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.zhbit.expresscompany.domain.Banches" table="Banches">
+		<id name="bid">
+			<generator class="native"/>
+		</id>
+		<property name="bname" type="string" length="32"/>
+	    <property name="pid" />
+	    <property name="cid" />
+	    <property name="baddress" type="string" length="128"/>
+	    <property name="bphone" type="string" length="16"/>
+	</class>
+</hibernate-mapping>
